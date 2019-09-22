@@ -1,4 +1,5 @@
-declare T Scale=30 FullLeft
+declare T TreeXY Scale=30 DepthFirst AddXY
+
 T = tree(key:a val:111
 	 left:tree(key:b val:55
 		   left:tree(key:x val:100
@@ -14,39 +15,20 @@ T = tree(key:a val:111
 					 right:tree(key:j val:6 left:leaf right:leaf)))
 		    right:tree(key:e val:133 left:leaf right:leaf)))
 
-proc {FullLeft Tree ?Key ?Value}
-   case Tree
-   of tree(key:K val:V left:leaf right:R) then
-      Key = K
-      Value = V
-   [] tree(key:K val:V left:L right:R) then
-      {FullLeft L ?Key ?Value}
-   end
-end
-
-local X Y
-in
-   {FullLeft T X Y}
-   {Browse X}
-   {Browse Y}
-end
-
-
-
 proc {DepthFirst Tree Level LeftLim ?RootX ?RightLim}
    case Tree
-   of tree(key:K val:V left:leaf right:leaf) then
+   of tree(x:X y:Y left:leaf right:leaf ...) then
       X=RootX=RightLim=LeftLim
       Y=Scale*Level
-   [] tree(x:X y:Y left:L right:leaf) then
+   [] tree(x:X y:Y left:L right:leaf ...) then
       X=RootX
       Y=Scale*Level
       {DepthFirst L Level+1 LeftLim RootX RightLim}
-   [] tree(x:X y:Y left:leaf right:R) then
+   [] tree(x:X y:Y left:leaf right:R ...) then
       X=RootX
       Y=Scale*Level
       {DepthFirst R Level+1 LeftLim RootX RightLim}
-   [] tree(x:X y:Y left:L right:R) then
+   [] tree(x:X y:Y left:L right:R ...) then
       LRootX LRightLim RRootX RLeftLim
    in
       Y=Scale*Level
@@ -57,22 +39,24 @@ proc {DepthFirst Tree Level LeftLim ?RootX ?RightLim}
    end
 end
 
-proc {DepthFirst Tree}
-   case Tree
-   of tree(left:L right:R) then
-      {DepthFirst L}
-      {DepthFirst R}
-   [] leaf then
-      skip
-   end
-end
-
 fun {AddXY Tree}
    case Tree
-   of tree(left:L right:R ...) then
+   of tree(left:L right:R val:V key:K) then
       {Adjoin Tree
        tree(x:_ y:_ left:{AddXY L} right:{AddXY R})}
    [] leaf then
       leaf
    end
 end
+
+TreeXY =  {AddXY T}
+
+{Browse TreeXY}
+
+local Level=5 LeftLim=10 RootX RightLim in
+   {DepthFirst TreeXY Level LeftLim ?RootX ?RightLim}
+   {Browse RootX}
+   {Browse RightLim}
+   {Browse TreeXY}
+end
+
