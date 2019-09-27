@@ -1,4 +1,6 @@
-declare T TreeXY Scale=30 DepthFirst AddXY
+declare
+
+Scale=30
 
 T = tree(key:a val:111
 	 left:tree(key:b val:55
