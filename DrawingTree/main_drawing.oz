@@ -21,13 +21,13 @@ import
 							 right:tree(key:j val:6 left:leaf right:leaf)))
 				    right:tree(key:e val:133 left:leaf right:leaf)))
 
-		TreeXY = {drawing_trees.AddXY T}
+		TreeXY = {drawing_trees.addXY T}
 
 		{Browser.browse TreeXY}
 
-    {drawing_trees.DepthFirst TreeXY Level LeftLim ?RootX ?RightLim}
+    {drawing_trees.depth TreeXY Level LeftLim ?RootX ?RightLim}
     {Browser.browse RootX}
     {Browser.browse RightLim}
     {Browser.browse TreeXY}
-	end
+
 end
